@@ -21,13 +21,10 @@ class Perfil
     #[ORM\Column(length: 255)]
     private ?string $descripcion = null;
 
-    #[ORM\OneToOne(mappedBy: 'perfil', cascade: ['persist', 'remove'])]
-    private ?Usuario $usuario = null;
-
     /**
      * @var Collection<int, Estilo>
      */
-    #[ORM\OneToMany(targetEntity: Estilo::class, mappedBy: 'perfil')]
+    #[ORM\ManyToMany(targetEntity: Estilo::class, inversedBy: 'perfiles')]
     private Collection $estiloMusicalPreferido;
 
     public function __construct()
@@ -71,23 +68,6 @@ class Perfil
         return $this;
     }
 
-    public function getUsuario(): ?Usuario
-    {
-        return $this->usuario;
-    }
-
-    public function setUsuario(Usuario $usuario): static
-    {
-        // set the owning side of the relation if necessary
-        if ($usuario->getPerfil() !== $this) {
-            $usuario->setPerfil($this);
-        }
-
-        $this->usuario = $usuario;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Estilo>
      */
@@ -100,7 +80,6 @@ class Perfil
     {
         if (!$this->estiloMusicalPreferido->contains($estiloMusicalPreferido)) {
             $this->estiloMusicalPreferido->add($estiloMusicalPreferido);
-            $estiloMusicalPreferido->setPerfil($this);
         }
 
         return $this;
@@ -108,12 +87,7 @@ class Perfil
 
     public function removeEstiloMusicalPreferido(Estilo $estiloMusicalPreferido): static
     {
-        if ($this->estiloMusicalPreferido->removeElement($estiloMusicalPreferido)) {
-            // set the owning side to null (unless already changed)
-            if ($estiloMusicalPreferido->getPerfil() === $this) {
-                $estiloMusicalPreferido->setPerfil(null);
-            }
-        }
+        $this->estiloMusicalPreferido->removeElement($estiloMusicalPreferido);
 
         return $this;
     }

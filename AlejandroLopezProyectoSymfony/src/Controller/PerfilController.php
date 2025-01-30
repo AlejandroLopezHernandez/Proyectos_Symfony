@@ -16,12 +16,11 @@ final class PerfilController extends AbstractController
         $perfil = new Perfil();
         
         $perfil->setFoto("");
-        $perfil->setDescripcion("Perfil 3");
+        $perfil->setDescripcion("Perfil 1");
 
         $entityManager->persist($perfil);
 
         $entityManager->flush();
-
-        return new Response("Perfil guardada con éxito");
+        return new Response("Perfil guardado con éxito");
     }
 }

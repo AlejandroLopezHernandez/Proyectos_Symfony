@@ -28,8 +28,7 @@ class Usuario
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $fechaNacimiento = null;
 
-    #[ORM\OneToOne(inversedBy: 'usuario', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Perfil $perfil = null;
 
     /**
@@ -115,7 +114,7 @@ class Usuario
         return $this->perfil;
     }
 
-    public function setPerfil(Perfil $perfil): static
+    public function setPerfil(?Perfil $perfil): static
     {
         $this->perfil = $perfil;
 

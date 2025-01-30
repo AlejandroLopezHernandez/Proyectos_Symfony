@@ -13,12 +13,10 @@ class PlaylistCancion
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity:Playlist::class,cascade:["persist"])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'playlistCanciones')]
     private ?Playlist $playlist = null;
 
-    #[ORM\ManyToOne(targetEntity: Cancion::class,cascade:["persist"])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'playlistCanciones')]
     private ?Cancion $cancion = null;
 
     public function getId(): ?int

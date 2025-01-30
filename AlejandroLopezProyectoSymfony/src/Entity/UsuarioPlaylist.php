@@ -13,15 +13,10 @@ class UsuarioPlaylist
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $reproducida = null;
-
     #[ORM\ManyToOne(inversedBy: 'usuarioPlaylists')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Usuario $usuario = null;
 
     #[ORM\ManyToOne(inversedBy: 'usuarioPlaylists')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Playlist $playlist = null;
 
     public function getId(): ?int
@@ -32,18 +27,6 @@ class UsuarioPlaylist
     public function setId(int $id): static
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getReproducida(): ?int
-    {
-        return $this->reproducida;
-    }
-
-    public function setReproducida(int $reproducida): static
-    {
-        $this->reproducida = $reproducida;
 
         return $this;
     }

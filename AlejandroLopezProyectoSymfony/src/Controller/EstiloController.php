@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Perfil;
 use App\Entity\Estilo;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,22 +14,16 @@ final class EstiloController extends AbstractController
     public function crearEstilo(EntityManagerInterface $entityManager): Response
     {
         $estilo = new Estilo();
-        $perfil = new Perfil();
-        
-        $perfil->setFoto("");
-        $perfil->setDescripcion("Perfil 2");
 
         $estilo->setId(1);
-        $estilo->setNombre("Ópera lírica");
-        $estilo->setDescripcion("Ópera lírica italiana");
-        $estilo->setPerfil($perfil);
+        $estilo->setNombre("Opera lirica");
+        $estilo->setDescripcion("Opera lirica italiana");
         
         $entityManager->persist($estilo);
-        $entityManager->persist($perfil);
+
 
         $entityManager->flush();
 
-        return new Response("Estilo guardada con éxito");
-
+        return new Response("Estilo guardado con éxito");
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Entity;
 
 use App\Repository\EstiloRepository;
@@ -20,19 +21,22 @@ class Estilo
     #[ORM\Column(length: 255)]
     private ?string $descripcion = null;
 
-    #[ORM\ManyToOne(targetEntity: Perfil::class, inversedBy: 'estiloMusicalPreferido')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Perfil $perfil = null;
-
     /**
      * @var Collection<int, Cancion>
      */
-    #[ORM\OneToMany(mappedBy: 'genero', targetEntity: Cancion::class, cascade: ['persist', 'remove'])]
-    private Collection $cancion;
+    #[ORM\OneToMany(targetEntity: Cancion::class, mappedBy: 'genero')]
+    private Collection $canciones;
+
+    /**
+     * @var Collection<int, Perfil>
+     */
+    #[ORM\ManyToMany(targetEntity: Perfil::class, mappedBy: 'estiloMusicalPreferido')]
+    private Collection $perfiles;
 
     public function __construct()
     {
-        $this->cancion = new ArrayCollection();
+        $this->canciones = new ArrayCollection();
+        $this->perfiles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -71,43 +75,58 @@ class Estilo
         return $this;
     }
 
-    public function getPerfil(): ?Perfil
-    {
-        return $this->perfil;
-    }
-
-    public function setPerfil(?Perfil $perfil): static
-    {
-        $this->perfil = $perfil;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Cancion>
      */
-    public function getCancion(): Collection
+    public function getCanciones(): Collection
     {
-        return $this->cancion;
+        return $this->canciones;
     }
 
-    public function addCancion(Cancion $cancion): static
+    public function addCancione(Cancion $cancione): static
     {
-        if (!$this->cancion->contains($cancion)) {
-            $this->cancion->add($cancion);
-            $cancion->setGenero($this);
+        if (!$this->canciones->contains($cancione)) {
+            $this->canciones->add($cancione);
+            $cancione->setGenero($this);
         }
 
         return $this;
     }
 
-    public function removeCancion(Cancion $cancion): static
+    public function removeCancione(Cancion $cancione): static
     {
-        if ($this->cancion->removeElement($cancion)) {
+        if ($this->canciones->removeElement($cancione)) {
             // set the owning side to null (unless already changed)
-            if ($cancion->getGenero() === $this) {
-                $cancion->setGenero(null);
+            if ($cancione->getGenero() === $this) {
+                $cancione->setGenero(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Perfil>
+     */
+    public function getPerfiles(): Collection
+    {
+        return $this->perfiles;
+    }
+
+    public function addPerfile(Perfil $perfile): static
+    {
+        if (!$this->perfiles->contains($perfile)) {
+            $this->perfiles->add($perfile);
+            $perfile->addEstiloMusicalPreferido($this);
+        }
+
+        return $this;
+    }
+
+    public function removePerfile(Perfil $perfile): static
+    {
+        if ($this->perfiles->removeElement($perfile)) {
+            $perfile->removeEstiloMusicalPreferido($this);
         }
 
         return $this;
