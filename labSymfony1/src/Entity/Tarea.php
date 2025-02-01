@@ -14,42 +14,22 @@ class Tarea
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Tarea = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $descripcion = null;
-
-    #[ORM\Column(length: 255)]
     private ?string $nombre = null;
 
     #[ORM\Column]
     private ?int $prioridad = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tarea')]
+    private ?Agenda $agenda = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTarea(): ?string
+    public function setId(int $id): static
     {
-        return $this->Tarea;
-    }
-
-    public function setTarea(string $Tarea): static
-    {
-        $this->Tarea = $Tarea;
-
-        return $this;
-    }
-
-    public function getDescripcion(): ?string
-    {
-        return $this->descripcion;
-    }
-
-    public function setDescripcion(string $descripcion): static
-    {
-        $this->descripcion = $descripcion;
+        $this->id = $id;
 
         return $this;
     }
@@ -76,5 +56,20 @@ class Tarea
         $this->prioridad = $prioridad;
 
         return $this;
+    }
+
+    public function getAgenda(): ?Agenda
+    {
+        return $this->agenda;
+    }
+
+    public function setAgenda(?Agenda $agenda): static
+    {
+        $this->agenda = $agenda;
+
+        return $this;
+    }
+    public function __tostring(){
+        return $this->nombre;
     }
 }

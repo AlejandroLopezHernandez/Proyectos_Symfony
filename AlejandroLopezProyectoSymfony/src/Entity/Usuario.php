@@ -43,10 +43,17 @@ class Usuario
     #[ORM\OneToMany(targetEntity: UsuarioPlaylist::class, mappedBy: 'usuario')]
     private Collection $usuarioPlaylists;
 
+    /**
+     * @var Collection<int, Cancion>
+     */
+    #[ORM\ManyToMany(targetEntity: Cancion::class, inversedBy: 'usuarios')]
+    private Collection $cancion;
+
     public function __construct()
     {
         $this->playlists = new ArrayCollection();
         $this->usuarioPlaylists = new ArrayCollection();
+        $this->cancion = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -177,6 +184,30 @@ class Usuario
                 $usuarioPlaylist->setUsuario(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cancion>
+     */
+    public function getCancion(): Collection
+    {
+        return $this->cancion;
+    }
+
+    public function addCancion(Cancion $cancion): static
+    {
+        if (!$this->cancion->contains($cancion)) {
+            $this->cancion->add($cancion);
+        }
+
+        return $this;
+    }
+
+    public function removeCancion(Cancion $cancion): static
+    {
+        $this->cancion->removeElement($cancion);
 
         return $this;
     }
