@@ -9,7 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Estilo;
 use App\Entity\Cancion;
-
+use App\Entity\Playlist;
+use App\Entity\PlaylistCancion;
 class DashboardController extends AbstractDashboardController
 {
     #[Route('/admin', name: 'admin')]
@@ -45,6 +46,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Canciones', 'fas fa-list', Cancion::class);
         yield MenuItem::linkToCrud('Estilos', 'fas fa-list', Estilo::class);
+        yield MenuItem::linkToCrud('Playlist', 'fas fa-list', Playlist::class);
+        //yield MenuItem::linkToCrud('Añadir canciones a una Playlist', 'fas fa-list', PlaylistCancion::class);
 
     }
 }

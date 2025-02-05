@@ -32,7 +32,7 @@ class Cancion
 
     #[ORM\ManyToOne(inversedBy: 'canciones')]
     private ?Estilo $genero = null;
-
+    
     /**
      * @var Collection<int, PlaylistCancion>
      */
@@ -50,7 +50,9 @@ class Cancion
         $this->playlistCanciones = new ArrayCollection();
         $this->usuarios = new ArrayCollection();
     }
-
+    public function __tostring(){
+        return $this->titulo ?? '';
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -138,6 +140,7 @@ class Cancion
     /**
      * @return Collection<int, PlaylistCancion>
      */
+  
     public function getPlaylistCanciones(): Collection
     {
         return $this->playlistCanciones;
