@@ -45,6 +45,9 @@ class Cancion
     #[ORM\ManyToMany(targetEntity: Usuario::class, mappedBy: 'cancion')]
     private Collection $usuarios;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $Archivo = null;
+
     public function __construct()
     {
         $this->playlistCanciones = new ArrayCollection();
@@ -191,6 +194,18 @@ class Cancion
         if ($this->usuarios->removeElement($usuario)) {
             $usuario->removeCancion($this);
         }
+
+        return $this;
+    }
+
+    public function getArchivo(): ?string
+    {
+        return $this->Archivo;
+    }
+
+    public function setArchivo(?string $Archivo): static
+    {
+        $this->Archivo = $Archivo;
 
         return $this;
     }

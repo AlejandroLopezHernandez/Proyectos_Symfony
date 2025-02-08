@@ -1,0 +1,189 @@
+<!DOCTYPE html> 
+<html lang="es"> 
+<head> 
+<meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MySpotify</title> 
+  </head> 
+  <body> 
+    <style>
+        body{
+            background-color: rgb(54, 52, 52);
+            h1{
+                color: black;
+                font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+                font-size:xx-large;
+            }
+        }
+            h2{
+                color: white;
+            }
+            footer{
+                background-color:rgb(105, 103, 103);
+                color: white;
+                position: fixed;
+                text-align: center;
+                padding: 10px;
+                bottom: 0;
+                width: 100%;
+            }
+            #songName{
+                align-items: center;
+            }
+            nav {
+            display: flex;
+            background-color: #088808; /* Verde brillante */
+            padding: 10px 20px; /* Espaciado interno */
+            position: fixed; /* Fija la barra en la parte superior */
+            top: 0;
+            left: 0;
+            width: 100%; /* Ocupa todo el ancho de la pantalla */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para efecto visual */
+            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+            align-items: center;
+        }
+
+        /* Estilos para los enlaces de la barra de navegación */
+        nav ul {
+            list-style: none; /* Quita los puntos de la lista */
+            margin: 0;
+            padding: 0;
+            display: flex; /* Coloca los elementos en línea */
+        }
+
+        nav ul li {
+            margin-right: 20px; /* Espacio entre elementos */
+        }
+        nav ul li a {
+            color: white; /* Color del texto */
+            text-decoration: none; /* Quita el subrayado */
+            font-size: 18px; /* Tamaño del texto */
+            font-weight: bold; /* Texto en negrita */
+        }
+
+        nav ul li a:hover {
+            color: #ccffcc; /* Cambia el color al pasar el mouse */
+        }
+        .busqueda{
+            display: flex; /* Activa flexbox */
+            justify-content: center; /* Centra horizontalmente */
+            align-items: center; /* Centra verticalmente */
+            height: 3vh; /* Ocupa toda la altura de la pantalla */
+            margin-left: 9cm;
+        }
+        .busqueda input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px; /* Espacio entre el input y el botón */
+        }
+        .busqueda button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #icono{
+            height: auto;
+            width: 50px;
+            margin-right: 15px;
+        }
+        .barra_lateral{
+            width: 100px; /* Ancho de la barra */
+            background-color: rgb(105, 103, 103); /* Gris oscuro */
+            height: 100vh; /* Altura completa de la ventana */
+            padding: 20px; /* Espaciado interno */
+            position: fixed;
+            top: 110px;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra para efecto visual */
+        }
+        .barra_lateral ul {
+            list-style: none; /* Quita los puntos de la lista */
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .barra_lateral ul li {
+            margin-bottom: 15px; /* Espacio entre elementos */
+            width: 100%;
+        }
+
+        .barra_lateral ul li a {
+            color: white; /* Color del texto */
+            text-decoration: none; /* Quita el subrayado */
+            font-size: 18px; /* Tamaño del texto */
+            display:block;
+            padding: 10px; /* Espaciado interno */
+            border-radius: 5px; /* Bordes redondeados */
+            text-align: center;
+            box-sizing: border-box;
+            transition: background-color 0.5s; /* Transición suave */
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+        #contenido_body{
+            margin-left: 140px;
+            margin-top: 110px;
+            padding: 20px;
+            color: white;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+        #img_login{
+            height: 40px;
+            width: auto;
+            margin-left: 13.5cm;
+        }
+    </style>
+    <nav>
+        <img src="./AlejandroLopezProyectoSymfony/minimalist Spotify-like icon with dark green background and musical waves.png" alt="icono" id="icono">
+        <h1>MySpotify</h1>
+        <div class="busqueda">
+            <input type="text" id="songName" placeholder="¿Qué canción buscas?" /> 
+            <button>Buscar</button>
+        </div>
+        <a href="www.google.es" target="_blank">
+            <img src="./user.png" alt="imagen_usuario" id="img_login">
+        </a>
+    </nav>
+    <nav class="barra_lateral">
+        <ul>
+            <li><a href="">Canción</a></li>
+            <li><a href="">Playlist</a></li>
+        </ul>
+    </nav>
+   <audio id="audioPlayer" controls style="display: none; margin-top: 20px;"> 
+   Tu navegador no soporta el elemento de audio. </audio>
+<div id="contenido_body">
+    <h2>Tus Canciones</h2>
+    
+</div>
+
+
+
+
+   <footer>2025 MySpotify. - Todos los derechos reservados</footer>
+
+   <script> 
+   function ReproducirMusica(titulo) { 
+    titulo = document.getElementsByClassName('VistaCancion').value;
+     if (!cancion) { 
+        alert('Por favor, ingresa el nombre de la canción.'); 
+        return;
+     } 
+        const audioPlayer = document.getElementById('audioPlayer'); 
+        audioPlayer.src = `/cancion/${titulo}` 
+        console.error('Error al reproducir la canción:', err); 
+        alert('No se pudo reproducir la canción. Asegúrate de que el archivo existe.'); 
+        };
+         </script> 
+         </body> 
+          </html>

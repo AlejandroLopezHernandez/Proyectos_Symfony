@@ -1,0 +1,82 @@
+<!DOCTYPE html> 
+<html lang="es"> 
+<head> 
+<meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ asset('./style.css')}}">
+  <title>MySpotify</title> 
+  </head> 
+  {%block body%}
+  <body> 
+    <nav>
+        <img src="{{ asset('./img/logo.png') }}" alt="icono" id="icono">
+        <h1>MySpotify</h1>
+        <div class="busqueda">
+            <input type="text" id="songName" placeholder="¿Qué canción buscas?" /> 
+            <button>Buscar</button>
+        </div>
+        <a href="www.google.es" target="_blank">
+            <img src="{{ asset('./img/user.png')}}" alt="imagen_usuario" id="img_login">
+        </a>
+    </nav>
+    <nav class="barra_lateral">
+        <ul>
+            <li><a href="">Canción</a></li>
+            <li><a href="">Playlist</a></li>
+        </ul>
+    </nav>
+<div id="contenido_body">
+    <h2>Tus Canciones</h2>
+    {%for cancion in canciones%}
+    <div class="VistaCancion" onclick="ReproducirMusica('{{cancion.titulo | e}}')">
+    <img src="{{ asset('./img/corchea.gif')}}" alt="img_musica">
+    <h3>{{cancion.titulo}}</h3>
+    <h4>{{cancion.autor}}</h4>
+    <br>
+   </div>
+   {%else%}
+   <span>No tienes canciones en tu biblioteca</span>
+   {%endfor%}
+   <audio id="audioPlayer" controls style="display: none; margin-top: 20px;"> 
+   Tu navegador no soporta el elemento de audio. </audio>
+   <div id="durationDisplay" style="margin-top: 10px;">Duración: --:--</div>
+</div>
+   <footer>2025 MySpotify. - Todos los derechos reservados</footer>
+
+   <script> 
+   function ReproducirMusica(titulo) { 
+    console.log("Título de la canción",titulo);
+     if (!titulo) { 
+        alert('Por favor, ingresa el nombre de la canción.'); 
+        return;
+     } 
+        const audioPlayer = document.getElementById('audioPlayer'); 
+         if (!audioPlayer) { 
+        alert('Audio Player no encontrado'); 
+        return;
+     } 
+     audioPlayer.style.display = "block"; 
+     //Aquí se hace la llamada al Controller
+         const url = `./cancion/${encodeURIComponent(titulo)}`; 
+         //const url = `./cancion/${titulo}`; 
+         audioPlayer.src = url;
+
+         // Evento para mostrar la duración cuando el archivo se cargue
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            const duration = audioPlayer.duration; // Duración en segundos
+            const minutes = Math.floor(duration / 60);
+            const seconds = Math.floor(duration % 60);
+            const durationDisplay = document.getElementById('durationDisplay');
+            durationDisplay.textContent = `Duración: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            console.log(duration);
+        });
+
+         audioPlayer.play().catch(err => {
+        console.error('Error al reproducir la canción:', err); 
+        alert('No se pudo reproducir la canción. Asegúrate de que el archivo existe.'); 
+   });
+   }
+   </script>
+         </body> 
+         {%endblock%}
+          </html>
