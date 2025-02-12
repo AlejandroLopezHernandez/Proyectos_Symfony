@@ -20,9 +20,9 @@ class PlaylistCancionCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
+            /*IdField::new('id'),
             AssociationField::new('playlist','Playlist')
-            ->setFormTypeOption('by_reference',true),
+            ->setFormTypeOption('by_reference',true),*/
             AssociationField::new('cancion','Cancion')
             ->setFormTypeOption('by_reference',true),
         ];

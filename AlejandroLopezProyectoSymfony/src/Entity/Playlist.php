@@ -19,7 +19,7 @@ class Playlist
     private ?string $nombre = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $visibilidad = null;
+    private ?bool $visibilidad = null;
 
     #[ORM\Column]
     private ?int $likes = null;
@@ -71,12 +71,12 @@ class Playlist
         return $this;
     }
 
-    public function getVisibilidad(): ?string
+    public function getVisibilidad(): ?bool
     {
         return $this->visibilidad;
     }
 
-    public function setVisibilidad(string $visibilidad): static
+    public function setVisibilidad(bool $visibilidad): static
     {
         $this->visibilidad = $visibilidad;
 

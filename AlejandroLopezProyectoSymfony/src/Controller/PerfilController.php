@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Perfil;
+use App\Repository\PlaylistRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

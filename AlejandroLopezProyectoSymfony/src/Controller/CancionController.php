@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\Cancion;
 use App\Repository\CancionRepository;
+use App\Repository\PlaylistRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -51,10 +52,39 @@ final class CancionController extends AbstractController
         $response->headers->set('Content-Type','audio/mpeg');
         return $response;
     }
-    #[Route('/cancion', name: 'app_music')]
-    public function index(CancionRepository $repositorio):Response
+    #[Route('/cancion', name: 'index_music')]
+    public function index(CancionRepository $repositorio1, PlaylistRepository $repositorio2):Response
     {
-        $canciones = $repositorio->findAll();
-        return $this->render('./play/play.html.twig',['canciones'=>$canciones]);
+        $canciones = $repositorio1->findAll();
+        $playlists = $repositorio2->findAll();
+
+        return $this->render('./play/play.html.twig',['canciones'=>$canciones,'playlists'=>$playlists]);
+    }
+
+    #[Route('/cancionesJSON', name: 'obtener_canciones',methods:['GET'])]
+    public function index3(CancionRepository $repositorio):JsonResponse
+    {
+        $canciones_obtenidas = $repositorio->findAll();
+        $canciones_disponibles = [];
+        foreach ($canciones_obtenidas as $cancion){
+            $canciones_disponibles[] = [
+                'titulo'=>$cancion->getTitulo(),
+                'autor'=>$cancion->getAutor()   
+            ]; 
+        }
+        return new JsonResponse($canciones_disponibles);
+    }
+
+    #[Route('/playlist/{id}', name: 'playlist_detalle',methods:['GET'])]
+    public function verPlaylist(int $id, PlaylistRepository $playlistRepository):Response{
+        $playlist = $playlistRepository->find($id);
+        if (!$playlist) {
+            throw $this->createNotFoundException('La playlist no existe.');
+        }
+    
+        return $this->render('./play/play.html.twig', [
+            'canciones' => $playlist->getPlaylistCanciones(), 
+            'playlists' => [$playlist]
+        ]);
     }
 }

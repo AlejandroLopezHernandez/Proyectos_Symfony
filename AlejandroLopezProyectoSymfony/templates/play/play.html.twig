@@ -19,64 +19,46 @@
             <img src="{{ asset('./img/user.png')}}" alt="imagen_usuario" id="img_login">
         </a>
     </nav>
+
     <nav class="barra_lateral">
         <ul>
-            <li><a href="">Canción</a></li>
-            <li><a href="">Playlist</a></li>
+            <li><a onclick="mostrar_canciones()">Canción</a></li>
+            <li><a onclick="mostrar_playlist()">Playlist</a></li>
         </ul>
     </nav>
-<div id="contenido_body">
+
+<div id="contenido_body" class="inline-container">
     <h2>Tus Canciones</h2>
     {%for cancion in canciones%}
-    <div class="VistaCancion" onclick="ReproducirMusica('{{cancion.titulo | e}}')">
-    <img src="{{ asset('./img/corchea.gif')}}" alt="img_musica">
+    <div id="bucle_canciones" class="VistaCancion" onclick="ReproducirMusica('{{ cancion.titulo |e('js')}}')">
+    <img src="{{ asset('./img/corchea.gif')}}" alt="img_musica" id="img_corchea">
     <h3>{{cancion.titulo}}</h3>
     <h4>{{cancion.autor}}</h4>
     <br>
    </div>
+
    {%else%}
    <span>No tienes canciones en tu biblioteca</span>
    {%endfor%}
+
+     <h2>Tus Playlists</h2>
+    {%for playlist in playlists%}
+        <div class="VistaPlaylist" onclick="cargarPlaylist('{{playlist.id}}')">
+        <img src="{{ asset('./img/playlist.png')}}" alt="playlist" id="img_playlist">
+            <h3>{{ playlist.nombre }}</h3>
+            <h4>Visibilidad: {{ playlist.visibilidad }}</h4>
+            <h4>Likes: {{ playlist.likes }}</h4>
+        </div>
+    {%else%}
+   <span>No tienes playlists en tu biblioteca</span>
+    {%endfor%}
+</div>
+
    <audio id="audioPlayer" controls style="display: none; margin-top: 20px;"> 
    Tu navegador no soporta el elemento de audio. </audio>
-   <div id="durationDisplay" style="margin-top: 10px;">Duración: --:--</div>
 </div>
    <footer>2025 MySpotify. - Todos los derechos reservados</footer>
-
-   <script> 
-   function ReproducirMusica(titulo) { 
-    console.log("Título de la canción",titulo);
-     if (!titulo) { 
-        alert('Por favor, ingresa el nombre de la canción.'); 
-        return;
-     } 
-        const audioPlayer = document.getElementById('audioPlayer'); 
-         if (!audioPlayer) { 
-        alert('Audio Player no encontrado'); 
-        return;
-     } 
-     audioPlayer.style.display = "block"; 
-     //Aquí se hace la llamada al Controller
-         const url = `./cancion/${encodeURIComponent(titulo)}`; 
-         //const url = `./cancion/${titulo}`; 
-         audioPlayer.src = url;
-
-         // Evento para mostrar la duración cuando el archivo se cargue
-        audioPlayer.addEventListener('loadedmetadata', () => {
-            const duration = audioPlayer.duration; // Duración en segundos
-            const minutes = Math.floor(duration / 60);
-            const seconds = Math.floor(duration % 60);
-            const durationDisplay = document.getElementById('durationDisplay');
-            durationDisplay.textContent = `Duración: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-            console.log(duration);
-        });
-
-         audioPlayer.play().catch(err => {
-        console.error('Error al reproducir la canción:', err); 
-        alert('No se pudo reproducir la canción. Asegúrate de que el archivo existe.'); 
-   });
-   }
-   </script>
+   <script src="{{ asset('./script.js')}}"></script>
+         {% endblock %}
          </body> 
-         {%endblock%}
           </html>
