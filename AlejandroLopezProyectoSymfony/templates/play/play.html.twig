@@ -43,7 +43,7 @@
 
      <h2>Tus Playlists</h2>
     {%for playlist in playlists%}
-        <div class="VistaPlaylist" onclick="cargarPlaylist('{{playlist.id}}')">
+        <div class="VistaPlaylist" onclick="mostrar_canciones_playlist('{{playlist.nombre}}')">
         <img src="{{ asset('./img/playlist.png')}}" alt="playlist" id="img_playlist">
             <h3>{{ playlist.nombre }}</h3>
             <h4>Visibilidad: {{ playlist.visibilidad }}</h4>

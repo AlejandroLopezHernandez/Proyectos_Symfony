@@ -51,4 +51,28 @@ final class PlaylistController extends AbstractController
         }
         return new JsonResponse($playlistdisponibles);
     }
+    #[Route('/CancionesPlaylist/{tituloPlaylist}', name: 'canciones_playlist',methods:['GET'])]
+    public function CancionesPlaylist(EntityManagerInterface $entityManager,string $tituloPlaylist):JsonResponse
+    {
+        try{
+            $RepositorioPlaylist = $entityManager->getRepository(Playlist::class);
+            $playlist = $RepositorioPlaylist->findOneBy(['nombre'=>$tituloPlaylist]);
+            if (!$playlist) {
+                return new JsonResponse(['error' => 'Playlist no encontrada'], 404);
+            }
+            $playlistCannciones = $playlist->getPlaylistCanciones();
+            $canciones = [];
+            foreach ($playlistCannciones as $p_c){
+                $cancion = $p_c->getCancion();
+                $canciones[] = [
+                    'titulo'=>$cancion->getTitulo(),
+                    'autor'=>$cancion->getAutor(),
+                    'ruta'=>$this->getParameter('kernel.project_dir').'/songs/'.$cancion->getArchivo().'.mp3'
+                ]; 
+            }
+            return new JsonResponse($canciones);
+        } catch(\Exception $exception){
+            return new JsonResponse(['error' => $exception->getMessage()], 500);
+        }
+    }
 }
