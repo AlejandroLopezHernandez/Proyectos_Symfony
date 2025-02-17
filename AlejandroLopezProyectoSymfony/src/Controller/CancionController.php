@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\Cancion;
@@ -10,11 +11,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 final class CancionController extends AbstractController
 {
-    #[Route('/crear/cancion', name: 'app_cancion')]
+    #[Route('/user/CrearCancion', name: 'app_cancion')]
     public function crearCancion(EntityManagerInterface $entityManager): Response
     {
         $cancion = new Cancion();
@@ -26,65 +28,90 @@ final class CancionController extends AbstractController
         $cancion->setDuracion(4);
 
         $entityManager->persist($cancion);
-        
+
 
         $entityManager->flush();
 
         return new Response("Canción guardada con éxito");
     }
-    #[Route('/cancion/{tituloCancion}', name: 'play_music',methods:['GET'])]
-    public function ReproducirMusica(string $tituloCancion,EntityManagerInterface $entityManager):Response{
+    #[Route('/user/cancion/{tituloCancion}', name: 'play_music', methods: ['GET'])]
+    public function ReproducirMusica(string $tituloCancion, EntityManagerInterface $entityManager): Response
+    {
         $repositorio = $entityManager->getRepository(Cancion::class);
-        $cancion = $repositorio->findOneBy(['titulo'=>$tituloCancion]);
-        if(!$cancion){
-            return new Response("Error 1, canción no encontrada",404);
+        $cancion = $repositorio->findOneBy(['titulo' => $tituloCancion]);
+        if (!$cancion) {
+            return new Response("Error 1, canción no encontrada", 404);
         }
         $nombreArchivo = trim($cancion->getArchivo());
-        var_dump($nombreArchivo.'<br>'); 
-        $directorioMusica = $this->getParameter('kernel.project_dir').'/public/songs/';
-        $ruta = $directorioMusica.$nombreArchivo.".mp3";
+        var_dump($nombreArchivo . '<br>');
+        $directorioMusica = $this->getParameter('kernel.project_dir') . '/public/songs/';
+        $ruta = $directorioMusica . $nombreArchivo . ".mp3";
 
-        if(!file_exists(realpath($ruta))){
-            return new Response('Error 2, archivo no encontrado',404);
+        if (!file_exists(realpath($ruta))) {
+            return new Response('Error 2, archivo no encontrado', 404);
         }
         $response = new BinaryFileResponse($ruta);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE);
-        $response->headers->set('Content-Type','audio/mpeg');
+        $response->headers->set('Content-Type', 'audio/mpeg');
         return $response;
     }
-    #[Route('/cancion', name: 'index_music')]
-    public function index(CancionRepository $repositorio1, PlaylistRepository $repositorio2):Response
+    #[Route('/main', name: 'main_page')]
+    public function index(CancionRepository $repositorio1, PlaylistRepository $repositorio2): Response
     {
         $canciones = $repositorio1->findAll();
         $playlists = $repositorio2->findAll();
 
-        return $this->render('./play/play.html.twig',['canciones'=>$canciones,'playlists'=>$playlists]);
+        return $this->render('./play/play.html.twig', ['canciones' => $canciones, 'playlists' => $playlists]);
     }
 
-    #[Route('/cancionesJSON', name: 'obtener_canciones',methods:['GET'])]
-    public function index3(CancionRepository $repositorio):JsonResponse
+    #[Route('/user/cancionesJSON', name: 'obtener_canciones', methods: ['GET'])]
+    public function index3(CancionRepository $repositorio): JsonResponse
     {
         $canciones_obtenidas = $repositorio->findAll();
         $canciones_disponibles = [];
-        foreach ($canciones_obtenidas as $cancion){
+        foreach ($canciones_obtenidas as $cancion) {
             $canciones_disponibles[] = [
-                'titulo'=>$cancion->getTitulo(),
-                'autor'=>$cancion->getAutor()   
-            ]; 
+                'titulo' => $cancion->getTitulo(),
+                'autor' => $cancion->getAutor()
+            ];
         }
         return new JsonResponse($canciones_disponibles);
     }
 
-    #[Route('/playlist/{id}', name: 'playlist_detalle',methods:['GET'])]
-    public function verPlaylist(int $id, PlaylistRepository $playlistRepository):Response{
+    #[Route('/user/playlist/{id}', name: 'playlist_detalle', methods: ['GET'])]
+    public function verPlaylist(int $id, PlaylistRepository $playlistRepository): Response
+    {
         $playlist = $playlistRepository->find($id);
         if (!$playlist) {
             throw $this->createNotFoundException('La playlist no existe.');
         }
-    
+
         return $this->render('./play/play.html.twig', [
-            'canciones' => $playlist->getPlaylistCanciones(), 
+            'canciones' => $playlist->getPlaylistCanciones(),
             'playlists' => [$playlist]
         ]);
+    }
+    #[Route('/user/buscarCancion/{titulo}', name: 'buscar_cancion', methods: ['GET'])]
+    public function BuscarCancion(string $titulo, CancionRepository $repositorio): JsonResponse
+    {
+        if (!$titulo) {
+            return new JsonResponse(['error' => 'No se proporcionó un título'], 400);
+        }
+        $canciones = $repositorio->createQueryBuilder('c')
+            ->where('c.titulo LIKE :titulo')
+            ->setParameter('titulo', '%' . $titulo . '%')
+            ->getQuery()
+            ->getResult();
+        if (empty($canciones)) {
+            return new JsonResponse(['mensaje' => 'No se encontraron canciones con ese título'], 404);
+        }
+        $canciones_disponibles = [];
+        foreach ($canciones as $cancion) {
+            $canciones_disponibles[] = [
+                'titulo' => $cancion->getTitulo(),
+                'autor' => $cancion->getAutor()
+            ];
+        }
+        return new JsonResponse($canciones_disponibles);
     }
 }

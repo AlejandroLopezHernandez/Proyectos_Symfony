@@ -10,12 +10,14 @@
   <body> 
     <nav>
         <img src="{{ asset('./img/logo.png') }}" alt="icono" id="icono">
+        <a href="/main" target="_blank">
         <h1>MySpotify</h1>
+        </a>
         <div class="busqueda">
             <input type="text" id="songName" placeholder="¿Qué canción buscas?" /> 
-            <button>Buscar</button>
+            <button id="buscarCancion">Buscar</button>
         </div>
-        <a href="www.google.es" target="_blank">
+        <a href="/login" target="_blank">
             <img src="{{ asset('./img/user.png')}}" alt="imagen_usuario" id="img_login">
         </a>
     </nav>
@@ -29,19 +31,21 @@
 
 <div id="contenido_body" class="inline-container">
     <h2>Tus Canciones</h2>
+    <div class="grid-canciones">
     {%for cancion in canciones%}
     <div id="bucle_canciones" class="VistaCancion" onclick="ReproducirMusica('{{ cancion.titulo |e('js')}}')">
     <img src="{{ asset('./img/corchea.gif')}}" alt="img_musica" id="img_corchea">
     <h3>{{cancion.titulo}}</h3>
     <h4>{{cancion.autor}}</h4>
     <br>
-   </div>
+   </div> <br><br>
 
    {%else%}
    <span>No tienes canciones en tu biblioteca</span>
    {%endfor%}
-
+</div>
      <h2>Tus Playlists</h2>
+     <div class="grid-playlists">
     {%for playlist in playlists%}
         <div class="VistaPlaylist" onclick="mostrar_canciones_playlist('{{playlist.nombre}}')">
         <img src="{{ asset('./img/playlist.png')}}" alt="playlist" id="img_playlist">
@@ -53,7 +57,7 @@
    <span>No tienes playlists en tu biblioteca</span>
     {%endfor%}
 </div>
-
+</div>
    <audio id="audioPlayer" controls style="display: none; margin-top: 20px;"> 
    Tu navegador no soporta el elemento de audio. </audio>
 </div>

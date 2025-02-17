@@ -2,24 +2,29 @@
 
 namespace App\Repository;
 
-use App\Entity\Usuario;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+
 /**
- * @extends ServiceEntityRepository<Usuario>
+ * @extends ServiceEntityRepository<User>
  */
-class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Usuario::class);
+        parent::__construct($registry, User::class);
     }
+
+    /**
+     * Used to upgrade (rehash) the user's password automatically over time.
+     */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        if (!$user instanceof Usuario) {
+        if (!$user instanceof User) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
@@ -28,20 +33,8 @@ class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgra
         $this->getEntityManager()->flush();
     }
 
-    public function loadUsuerByIdentifier(string $userNameOrEmail){
-        $entityManager = $this->getEntityManager();
-
-        return $entityManager->createQuery(
-            'SELECT u
-            FROM App\Entity\Usuario u
-            WHERE u.nombre = :query
-            OR u.email = :query'
-        )
-        ->setParameter('query',$userNameOrEmail)
-        ->getOneOrNullResult();
-    }
     //    /**
-    //     * @return Usuario[] Returns an array of Usuario objects
+    //     * @return User[] Returns an array of User objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -55,7 +48,7 @@ class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgra
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Usuario
+    //    public function findOneBySomeField($value): ?User
     //    {
     //        return $this->createQueryBuilder('u')
     //            ->andWhere('u.exampleField = :val')

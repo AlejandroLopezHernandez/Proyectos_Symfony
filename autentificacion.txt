@@ -1,0 +1,29 @@
+Tiene que haber tres rutas.
+/user
+/admin
+/manager
+
+Sólo tiene que haber una entidad usuario. (make:user)
+Podemos añadir a la clase usuario que ya tenemos 
+las cosas de user. Eso lo podemos hacer creando primero la clase "user",
+y luego le añadimos las cosas a la entidad "usuario". Luego hacemos un migration.
+Presta atención al encabezado.
+
+Al nivel de instrucción no vamos a llegar.
+
+-login
+-registro
+-autorización
+
+Cambiar las rutas a esto:
+/user
+/admin
+/manager
+
+Podemos crear los roles que queramos. 
+En clase usuario, aparece getRoles, comentar la línea:
+$roles[] = 'ROLE_USER';
+
+
+
+

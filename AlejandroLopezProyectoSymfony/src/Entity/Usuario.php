@@ -6,10 +6,13 @@ use App\Repository\UsuarioRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UsuarioRepository::class)]
-class Usuario
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,14 +21,22 @@ class Usuario
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
+    /**
+     * @var list<string> The user roles
+     */
+    #[ORM\Column]
+    private array $roles = [];
 
+    /**
+     * @var string The hashed password
+     */
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
     private ?string $nombre = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: 'date', nullable: true)]
     private ?\DateTimeInterface $fechaNacimiento = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
@@ -55,7 +66,8 @@ class Usuario
         $this->usuarioPlaylists = new ArrayCollection();
         $this->cancion = new ArrayCollection();
     }
-    public function __tostring(){
+    public function __tostring()
+    {
         return $this->nombre ?? '';
     }
 
@@ -70,6 +82,21 @@ class Usuario
 
         return $this;
     }
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
 
     public function getEmail(): ?string
     {
@@ -118,7 +145,24 @@ class Usuario
 
         return $this;
     }
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        //$roles[] = 'ROLE_USER';
 
+        return array_unique($roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
     public function getPerfil(): ?Perfil
     {
         return $this->perfil;
@@ -213,5 +257,13 @@ class Usuario
         $this->cancion->removeElement($cancion);
 
         return $this;
+    }
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }
