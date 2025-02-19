@@ -33,8 +33,9 @@ class RegistrationFormType extends AbstractType
                 'choices' => [
                     'Admin' => 'ROLE_ADMIN',
                     'User' => 'ROLE_USER',
+                    'Manager' => 'ROLE_MANAGER'
                 ],
-                'multiple' => true, // Permitir múltiples opciones 
+                'multiple' => true,
                 'expanded' => true,
             ]) // Renderiza como checkboxes 
             //->add('password') quitar este y sustituir por este 

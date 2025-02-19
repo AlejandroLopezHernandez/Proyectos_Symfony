@@ -78,10 +78,12 @@ function ReproducirMusica(titulo) {
     <audio id="audioPlayer" controls style="display: block; margin-top: 20px;"> 
     Tu navegador no soporta el elemento de audio. </audio>`;
 }
-document.addEventListener("DOMContentLoaded", function() {
-    let btn_buscar = document.querySelector("#buscarCancion");
-    btn_buscar.addEventListener('click', buscarCancionXNombre);
-});
+// document.addEventListener("DOMContentLoaded", function() {
+//     let btn_buscar = document.querySelector("#buscarCancion");
+//     btn_buscar.addEventListener('click', buscarCancionXNombre);
+// });
+let btn_buscar = document.querySelector("#buscarCancion");
+btn_buscar.addEventListener('click', buscarCancionXNombre);
 
 async function buscarCancionXNombre(){
     console.log("prueba 4");
