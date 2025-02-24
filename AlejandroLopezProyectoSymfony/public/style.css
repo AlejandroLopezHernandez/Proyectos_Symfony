@@ -22,6 +22,7 @@ body{
     }
     #songName{
         align-items: center;
+        width: 255px;
     }
     nav {
     display: flex;
@@ -57,6 +58,12 @@ nav ul li a {
 nav ul li a:hover {
     color: #ccffcc; /* Cambia el color al pasar el mouse */
 }
+.btn-separado{
+    margin-left: 5px;
+    margin-right: 10px;
+    padding-left: 5px;
+    padding-right: 10px;
+}
 .busqueda{
     display: flex; /* Activa flexbox */
     justify-content: center; /* Centra horizontalmente */
@@ -85,10 +92,11 @@ nav ul li a:hover {
     margin-right: 15px;
 }
 .barra_lateral{
-    width: 100px; /* Ancho de la barra */
+    width: 120px; /* Ancho de la barra */
     background-color: rgb(105, 103, 103); /* Gris oscuro */
-    height: 100vh; /* Altura completa de la ventana */
-    padding: 20px; /* Espaciado interno */
+    height: 100vh!important; /* Altura completa de la ventana */
+    padding: 10px; /* Espaciado interno */
+    overflow-y: auto;
     position: fixed;
     top: 110px;
     left: 0;
@@ -113,11 +121,12 @@ nav ul li a:hover {
 }
 
 .barra_lateral ul li a {
-    color: white; /* Color del texto */
+    color: white !important; /* Color del texto */
     text-decoration: none; /* Quita el subrayado */
     font-size: 18px; /* Tamaño del texto */
     display:block;
-    padding: 10px; /* Espaciado interno */
+    padding: 15px 10px; /* Espaciado interno */
+    margin-bottom: 10px;
     border-radius: 5px; /* Bordes redondeados */
     text-align: center;
     box-sizing: border-box;
@@ -131,7 +140,7 @@ nav ul li a:hover {
     gap: 20px;
 }
 #contenido_body{
-    display: grid;
+    display: flex;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     text-align: center;
     margin-left: 140px;
@@ -143,16 +152,20 @@ nav ul li a:hover {
   #img_login{
     height: 40px;
     width: auto;
-    margin-left: 17cm;
+    margin-left: 12.5cm;
 }
 #audioPlayer {
+    position: fixed;
+    width: calc(100% - 40px);
     width: 100%;
-    max-width: 400px; /* Ajusta el ancho según necesites */
-    margin-top: 20px;
-    background: #222;
+    max-width: 1550px;
+    bottom: 40px;
+    margin-left: 120px;
+    background: #686767;
     border-radius: 10px;
     padding: 10px;
-    box-shadow: 0px 4px 10px rgb(54, 52, 52);
+    z-index: 1000;
+    box-shadow: 0px -2px 5px rgb(69, 67, 67);
 }
 
 #audioPlayer::-webkit-media-controls-panel {
@@ -181,6 +194,7 @@ nav ul li a:hover {
     background: white;
     border-radius: 5px;
 }
+
 #img_corchea{
     cursor: pointer;
 }
@@ -197,6 +211,15 @@ nav ul li a:hover {
     text-align: center;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgb(54, 52, 52);
+}
+.VistaCancion:hover, .VistaPlaylist:hover{
+    transform: scale(1.05);
+    box-shadow: 0px 6px 10px rgb(0, 0, 0.3);
+}
+.VistaCancion img, .VistaPlaylist img{
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
 }
 #img_playlist, #img_playlist{
     width: 150px;

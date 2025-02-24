@@ -21,7 +21,7 @@ final class PlaylistController extends AbstractController
         $playlist = new Playlist();
 
         $playlist->setNombre("Opera lirica");
-        $playlist->setVisibilidad("Visible");
+        $playlist->setVisibilidad(true);
         $playlist->setLikes(50);
 
         $entityManager->persist($playlist);
@@ -74,5 +74,31 @@ final class PlaylistController extends AbstractController
         } catch (\Exception $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 500);
         }
+    }
+    #[Route('/user/buscarPlaylist/{nombre}', name: 'buscar_playlist', methods: ['GET'])]
+    public function buscarPlaylistXNombre(PlaylistRepository $repositorio, string $nombre): JsonResponse
+    {
+        if (!$nombre) {
+            return new JsonResponse(['error' => 'No se proporcionó un nombre'], 400);
+        }
+
+        $playlistsobtenidas = $repositorio->createQueryBuilder('p')
+            ->where('p.nombre LIKE :nombre')
+            ->setParameter('nombre', '%' . $nombre . '%')
+            ->getQuery()
+            ->getResult();
+
+        if (empty($playlistsobtenidas)) {
+            return new JsonResponse(['mensaje' => 'No se encontraron playlist con ese nombre'], 404);
+        }
+        $playlistdisponibles = [];
+        foreach ($playlistsobtenidas as $playlist) {
+            $playlistdisponibles[] = [
+                'id' => $playlist->getId(),
+                'nombre' => $playlist->getNombre(),
+                'likes' => $playlist->getLikes(),
+            ];
+        }
+        return new JsonResponse($playlistdisponibles);
     }
 }

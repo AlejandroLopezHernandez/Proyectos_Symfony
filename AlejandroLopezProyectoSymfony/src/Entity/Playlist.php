@@ -30,7 +30,7 @@ class Playlist
     /**
      * @var Collection<int, PlaylistCancion>
      */
-    #[ORM\OneToMany(targetEntity: PlaylistCancion::class, mappedBy: 'playlist', cascade:['persist'])]
+    #[ORM\OneToMany(targetEntity: PlaylistCancion::class, mappedBy: 'playlist', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $playlistCanciones;
 
     /**
@@ -44,7 +44,8 @@ class Playlist
         $this->playlistCanciones = new ArrayCollection();
         $this->usuarioPlaylists = new ArrayCollection();
     }
-    public function __tostring(){   
+    public function __tostring()
+    {
         return $this->nombre ?? '';
     }
     public function getId(): ?int
