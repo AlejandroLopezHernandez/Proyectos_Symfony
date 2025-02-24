@@ -51,8 +51,8 @@ async function mostrar_canciones() {
     div.innerHTML += `
                 <div class="VistaCancion" onclick="ReproducirMusica('${cancion.titulo}')">
                 <img src="./img/corchea.gif" alt="musica" id="img_cancion" style="widh:100px;height:auto">
-                    <h5>${cancion.titulo}</h5>
-                    <h6>${cancion.autor}</h6>
+                    <h4>${cancion.titulo}</h4>
+                    <h5>${cancion.autor}</h5>
                 </div>`;
   }
   div.innerHTML += `
@@ -72,8 +72,8 @@ async function mostrar_canciones_playlist(tituloPlaylist) {
     div.innerHTML += `
             <div class="VistaCancion" onclick="ReproducirMusica('${cancion.titulo}')">
             <img src="./img/corchea.gif" alt="musica" id="img_cancion">
-                <h3>${cancion.titulo}</h3>
-                <h4>${cancion.autor}</h4>
+                <h4>${cancion.titulo}</h4>
+                <h5>${cancion.autor}</h5>
             </div>`;
   }
   div.innerHTML += `
