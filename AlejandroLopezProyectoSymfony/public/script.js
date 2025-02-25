@@ -30,14 +30,21 @@ async function mostrar_playlist() {
 
   div.innerHTML = `<h2>Tus Playlists</h2>`;
   //onclick="cargarPlaylist('${playlist.id}')"
+  let grid = document.createElement("div");
+  grid.classList.add("row", "grid-playlist");
   for (let playlist of playlists) {
-    div.innerHTML += `
+    let playlistHTML = `
+          <div class="col-md-3 col-sm-6 col-12">
             <div class="VistaPlaylist" >
             <img src="./img/playlist.jpg" alt="playlist" id="img_playlist" onclick="mostrar_canciones_playlist('${playlist.nombre}')">
                 <h4>${playlist.nombre}</h4>
                 <h5>Likes: ${playlist.likes}</h5>
+                </div>
+                </div>
                 </div>`;
+    grid.innerHTML += playlistHTML;
   }
+  div.appendChild(grid);
 }
 
 async function mostrar_canciones() {
@@ -47,14 +54,21 @@ async function mostrar_canciones() {
   let canciones = await query.json();
   div.innerHTML = `<h2>Tus Canciones</h2>`;
   //onclick="cargarPlaylist('${playlist.id}')"
+  let grid = document.createElement("div");
+  grid.classList.add("row", "grid-cancion");
   for (let cancion of canciones) {
-    div.innerHTML += `
+    let cancionHTML = `
+          <div class="col-md-3 col-sm-6 col-12">
                 <div class="VistaCancion" onclick="ReproducirMusica('${cancion.titulo}')">
-                <img src="./img/corchea.gif" alt="musica" id="img_cancion" style="widh:100px;height:auto">
+                <img src="./img/corchea.gif" alt="musica" id="img_corchea">
                     <h4>${cancion.titulo}</h4>
                     <h5>${cancion.autor}</h5>
+                </div>
+                </div>
                 </div>`;
+    grid.innerHTML += cancionHTML;
   }
+  div.appendChild(grid);
   div.innerHTML += `
         <audio id="audioPlayer" controls style="display: block; margin-top: 20px;"> 
         Tu navegador no soporta el elemento de audio. </audio>`;
@@ -68,14 +82,21 @@ async function mostrar_canciones_playlist(tituloPlaylist) {
   let canciones = await query.json();
   div.innerHTML = `<h2>Las canciones de tu playlist</h2>`;
   //onclick="cargarPlaylist('${playlist.id}')"
+  let grid = document.createElement("div");
+  grid.classList.add("row", "grid-cancion");
   for (let cancion of canciones) {
-    div.innerHTML += `
+    let cancionHTML = `
+          <div class="col-md-3 col-sm-6 col-12">
             <div class="VistaCancion" onclick="ReproducirMusica('${cancion.titulo}')">
-            <img src="./img/corchea.gif" alt="musica" id="img_cancion">
+            <img src="./img/corchea.gif" alt="musica" id="img_corchea">
                 <h4>${cancion.titulo}</h4>
                 <h5>${cancion.autor}</h5>
-            </div>`;
+            </div>
+            </div>
+                </div>`;
+    grid.innerHTML += cancionHTML;
   }
+  div.appendChild(grid);
   div.innerHTML += `
     <audio id="audioPlayer" controls style="display: block; margin-top: 20px;"> 
     Tu navegador no soporta el elemento de audio. </audio>`;
@@ -106,7 +127,7 @@ async function buscarCancionesYplaylist() {
       for (let cancion of canciones) {
         div.innerHTML += `
                     <div class="VistaCancion" onclick="ReproducirMusica('${cancion.titulo}')">
-                    <img src="./img/corchea.gif" alt="musica" id="img_cancion">
+                    <img src="./img/corchea.gif" alt="musica" id="img_corchea">
                         <h4>${cancion.titulo}</h4>
                         <h5>${cancion.autor}</h5>
                     </div>`;
@@ -129,7 +150,7 @@ async function buscarCancionesYplaylist() {
       for (let playlist of playlists) {
         div.innerHTML += `
                     <div class="VistaPlaylist" onclick="mostrar_canciones_playlist('${playlist.nombre}')">
-                    <img src="./img/playlist.jpg" alt="musica" id="img_cancion">
+                    <img src="./img/playlist.jpg" alt="musica" id="img_corchea">
                         <h4>${playlist.nombre}</h4>
                         <h5>${playlist.likes}</h5>
                     </div>`;

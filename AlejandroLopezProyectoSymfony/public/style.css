@@ -140,13 +140,15 @@ nav ul li a:hover {
     gap: 20px;
 }
 #contenido_body{
-    display: flex;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    display:flex;
+    justify-content: flex-start;
+    flex-direction:column;
     text-align: center;
-    margin-left: 140px;
-    margin-top: 110px;
-    padding: 20px;
+    margin-left: 120px;
+    margin-top: 80px;
+    padding: 10px;
     color: white;
+    width: calc(100% - 100px);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
   #img_login{
@@ -200,13 +202,17 @@ nav ul li a:hover {
     height: 100px;
     cursor: pointer;
 }
+.grid-canciones,.grid-playlists {
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
 .VistaCancion{
     cursor: pointer;
-    padding: 15px;
+    padding: 10px;
     width:200px;
-    height: 220px;
-    margin: 10px;
-    padding: 20px;
+    height: 200px;
     border: 1px solid #78767600;
     background-color:rgb(84, 84, 84);
     text-align: center;
@@ -215,11 +221,9 @@ nav ul li a:hover {
 }
 .VistaPlaylist{
     cursor: pointer;
-    padding: 15px;
+    padding: 10px;
     width:200px;
-    height: 220px;
-    margin: 20px;
-    padding: 20px;
+    height: 200px;
     border: 1px solid #78767600;
     background-color:rgb(84, 84, 84);
     text-align: center;
@@ -268,11 +272,6 @@ nav ul li a:hover {
         max-width: 100%;
         height: auto;
     }
-    #contenido_body {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        margin-left: 0;
-        padding: 10px;
-    }
     #contenido_body h2{
         grid-column: 1 / -1; /* Ocupa desde la primera columna hasta la última */
         text-align: left; /* Alinea el texto a la izquierda */
@@ -284,10 +283,17 @@ nav ul li a:hover {
         align-items: center;
         margin-left: 0;
     }
-    .grid-canciones, .grid-playlists{
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 20px;
+    .grid-canciones{
+        display:flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+    .grid-playlists{
+        display:flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
     }
     .busqueda input {
         width: 80%;

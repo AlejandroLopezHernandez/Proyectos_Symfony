@@ -35,26 +35,29 @@
 
 <div id="contenido_body">
 <h2>Tus Canciones</h2>
-    <div class="grid-canciones">
+    <div class="row grid-canciones"> 
     {%for cancion in canciones%}
+    <div class="col-md-3 col-sm-6 col-12">
     <div id="bucle_canciones" class="VistaCancion" onclick="ReproducirMusica('{{ cancion.titulo |e('js')}}')">
     <img src="{{ asset('./img/corchea.gif')}}" alt="img_musica" id="img_corchea">
     <h4>{{cancion.titulo}}</h4>
     <h5>{{cancion.autor}}</h5>
     <br>
    </div> 
-
+   </div>
    {%else%}
    <span>No tienes canciones en tu biblioteca</span>
    {%endfor%}
-</div>
+    </div>
      <h2>Tus Playlists</h2>
-     <div class="grid-playlists">
+     <div class="row grid-playlists">
     {%for playlist in playlists%}
+    <div class="col-md-3 col-sm-6 col-12">
         <div class="VistaPlaylist" onclick="mostrar_canciones_playlist('{{playlist.nombre}}')">
         <img src="{{ asset('./img/playlist.jpg')}}" alt="playlist" id="img_playlist">
             <h4>{{ playlist.nombre }}</h4>
             <h5>Likes: {{ playlist.likes }}</h5>
+        </div>
         </div>
     {%else%}
    <span>No tienes playlists en tu biblioteca</span>
