@@ -34,7 +34,7 @@ async function mostrar_playlist() {
   grid.classList.add("row", "grid-playlist");
   for (let playlist of playlists) {
     let playlistHTML = `
-          <div class="col-md-3 col-sm-6 col-12">
+          <div class="col-md-2 col-sm-6 col-12">
             <div class="VistaPlaylist" >
             <img src="./img/playlist.jpg" alt="playlist" id="img_playlist" onclick="mostrar_canciones_playlist('${playlist.nombre}')">
                 <h4>${playlist.nombre}</h4>
@@ -58,7 +58,7 @@ async function mostrar_canciones() {
   grid.classList.add("row", "grid-cancion");
   for (let cancion of canciones) {
     let cancionHTML = `
-          <div class="col-md-3 col-sm-6 col-12">
+          <div class="col-md-2 col-sm-6 col-12">
                 <div class="VistaCancion" onclick="ReproducirMusica('${cancion.titulo}')">
                 <img src="./img/corchea.gif" alt="musica" id="img_corchea">
                     <h4>${cancion.titulo}</h4>
@@ -86,7 +86,7 @@ async function mostrar_canciones_playlist(tituloPlaylist) {
   grid.classList.add("row", "grid-cancion");
   for (let cancion of canciones) {
     let cancionHTML = `
-          <div class="col-md-3 col-sm-6 col-12">
+          <div class="col-md-2 col-sm-6 col-12">
             <div class="VistaCancion" onclick="ReproducirMusica('${cancion.titulo}')">
             <img src="./img/corchea.gif" alt="musica" id="img_corchea">
                 <h4>${cancion.titulo}</h4>
