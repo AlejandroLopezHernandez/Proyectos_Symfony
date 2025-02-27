@@ -16,7 +16,7 @@ class CancionCrudController extends AbstractCrudController
         return Cancion::class;
     }
 
-    
+
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -26,7 +26,7 @@ class CancionCrudController extends AbstractCrudController
             TextField::new('album'),
             TextField::new('autor'),
             NumberField::new('likes'),
+            TextField::new('archivo'),
         ];
     }
-    
 }

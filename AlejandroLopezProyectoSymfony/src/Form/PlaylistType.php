@@ -26,8 +26,9 @@ class PlaylistType extends AbstractType
                 'choice_label' => 'titulo',
                 'multiple' => true,
                 'expanded' => true, //Muestra checkboxes
-                'label' => 'Selecciona canciones para tu playlist',
+                'label' => ' ',
                 'mapped' => false,
+                'attr' => ['style' => 'display:none']
             ]);
     }
     public function configureOptions(OptionsResolver $resolver)

@@ -46,7 +46,7 @@
             {% for cancion in canciones %}
                 <option value="{{ cancion.id }}">{{ cancion.titulo }} - {{ cancion.autor }}</option>
             {% endfor %}
-        </select>
+        </select><br>
         <button type="submit">Guardar Playlist</button>
     {{ form_end(form) }}
 

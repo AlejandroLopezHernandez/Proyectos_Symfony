@@ -214,6 +214,7 @@ nav ul li a:hover {
 .VistaCancion{
     cursor: pointer;
     padding: 10px;
+    margin-top: 20px;
     width:200px;
     height: 200px;
     border: 1px solid #78767600;
@@ -225,6 +226,7 @@ nav ul li a:hover {
 .VistaPlaylist{
     cursor: pointer;
     padding: 10px;
+    margin-top: 20px;
     width:200px;
     height: 200px;
     border: 1px solid #78767600;

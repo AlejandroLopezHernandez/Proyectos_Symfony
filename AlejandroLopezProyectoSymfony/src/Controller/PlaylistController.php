@@ -15,6 +15,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
@@ -22,14 +23,17 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Constraints\Json;
 
 
+
 final class PlaylistController extends AbstractController
 {
     #[Route('/user/crear_playlist', name: 'crear_playlist', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function crearPlaylist(EntityManagerInterface $entityManager, Request $request, CancionRepository $repositorioCancion): Response
+    public function crearPlaylist(EntityManagerInterface $entityManager, Request $request, CancionRepository $repositorioCancion, Security $security): Response
     {
+        $usuario = $security->getUser();
         $playlist = new Playlist();
         $playlist->setLikes(0); // Establecemos un valor predeterminado para likes
+        $playlist->setPropietario($usuario);
 
         $form = $this->createForm(PlaylistType::class, $playlist);
         $form->handleRequest($request);
@@ -39,7 +43,6 @@ final class PlaylistController extends AbstractController
             if (!is_array($cancionesIds)) {
                 $cancionesIds = [];
             }
-
             foreach ($cancionesIds as $cancionId) {
                 $cancion = $repositorioCancion->find($cancionId);
                 if ($cancion) {
@@ -53,7 +56,8 @@ final class PlaylistController extends AbstractController
             $entityManager->persist($playlist);
             $entityManager->flush();
 
-            return new JsonResponse(['message' => 'Playlist creada con éxito', 'playlist_id' => $playlist->getId()]);
+            return $this->redirectToRoute('main_page');
+            //return new JsonResponse(['message' => 'Playlist creada con éxito', 'playlist_id' => $playlist->getId()]);
         }
         $canciones = $repositorioCancion->findAll();
 
@@ -62,8 +66,6 @@ final class PlaylistController extends AbstractController
             'canciones' => $canciones,
         ]);
     }
-
-
 
     /*#[Route('/playlist', name: 'music_playlist')]
     public function index(PlaylistRepository $repositorio):Response
