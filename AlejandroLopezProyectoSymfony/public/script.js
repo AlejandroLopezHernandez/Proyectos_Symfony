@@ -28,20 +28,20 @@ async function mostrar_playlist() {
   let query = await fetch(`/user/playlist`);
   let playlists = await query.json();
 
-  div.innerHTML = `<h2>Tus Playlists</h2>`;
+  div.innerHTML = `<h2>Playlists</h2>`;
   //onclick="cargarPlaylist('${playlist.id}')"
   let grid = document.createElement("div");
   grid.classList.add("row", "grid-playlist");
   for (let playlist of playlists) {
     let playlistHTML = `
-          <div class="col-md-2 col-sm-6 col-12">
-            <div class="VistaPlaylist" >
-            <img src="./img/playlist.jpg" alt="playlist" id="img_playlist" onclick="mostrar_canciones_playlist('${playlist.nombre}')">
-                <h4>${playlist.nombre}</h4>
-                <h5>Likes: ${playlist.likes}</h5>
-                </div>
-                </div>
-                </div>`;
+        <div class="col-md-2 col-sm-6 col-12">
+          <div class="VistaPlaylist" >
+          <img src="./img/playlist.jpg" alt="playlist" id="img_playlist" onclick="mostrar_canciones_playlist('${playlist.nombre}')">
+              <h4>${playlist.nombre}</h4>
+              <h5>Likes: ${playlist.likes}</h5>
+              </div>
+              </div>
+              </div>`;
     grid.innerHTML += playlistHTML;
   }
   div.appendChild(grid);
@@ -52,26 +52,26 @@ async function mostrar_canciones() {
   let div = document.querySelector("#contenido_body");
   let query = await fetch(`/user/cancionesJSON`);
   let canciones = await query.json();
-  div.innerHTML = `<h2>Tus Canciones</h2>`;
+  div.innerHTML = `<h2>Canciones</h2>`;
   //onclick="cargarPlaylist('${playlist.id}')"
   let grid = document.createElement("div");
   grid.classList.add("row", "grid-cancion");
   for (let cancion of canciones) {
     let cancionHTML = `
-          <div class="col-md-2 col-sm-6 col-12">
-                <div class="VistaCancion" onclick="ReproducirMusica('${cancion.titulo}')">
-                <img src="./img/corchea.gif" alt="musica" id="img_corchea">
-                    <h4>${cancion.titulo}</h4>
-                    <h5>${cancion.autor}</h5>
-                </div>
-                </div>
-                </div>`;
+        <div class="col-md-2 col-sm-6 col-12">
+              <div class="VistaCancion" onclick="ReproducirMusica('${cancion.titulo}')">
+              <img src="./img/corchea.gif" alt="musica" id="img_corchea">
+                  <h4>${cancion.titulo}</h4>
+                  <h5>${cancion.autor}</h5>
+              </div>
+              </div>
+              </div>`;
     grid.innerHTML += cancionHTML;
   }
   div.appendChild(grid);
   div.innerHTML += `
-        <audio id="audioPlayer" controls style="display: block; margin-top: 20px;"> 
-        Tu navegador no soporta el elemento de audio. </audio>`;
+      <audio id="audioPlayer" controls style="display: block; margin-top: 20px;"> 
+      Tu navegador no soporta el elemento de audio. </audio>`;
 }
 async function mostrar_canciones_playlist(tituloPlaylist) {
   console.log("prueba 3");
@@ -86,20 +86,20 @@ async function mostrar_canciones_playlist(tituloPlaylist) {
   grid.classList.add("row", "grid-cancion");
   for (let cancion of canciones) {
     let cancionHTML = `
-          <div class="col-md-2 col-sm-6 col-12">
-            <div class="VistaCancion" onclick="ReproducirMusica('${cancion.titulo}')">
-            <img src="./img/corchea.gif" alt="musica" id="img_corchea">
-                <h4>${cancion.titulo}</h4>
-                <h5>${cancion.autor}</h5>
-            </div>
-            </div>
-                </div>`;
+        <div class="col-md-2 col-sm-6 col-12">
+          <div class="VistaCancion" onclick="ReproducirMusica('${cancion.titulo}')">
+          <img src="./img/corchea.gif" alt="musica" id="img_corchea">
+              <h4>${cancion.titulo}</h4>
+              <h5>${cancion.autor}</h5>
+          </div>
+          </div>
+              </div>`;
     grid.innerHTML += cancionHTML;
   }
   div.appendChild(grid);
   div.innerHTML += `
-    <audio id="audioPlayer" controls style="display: block; margin-top: 20px;"> 
-    Tu navegador no soporta el elemento de audio. </audio>`;
+  <audio id="audioPlayer" controls style="display: block; margin-top: 20px;"> 
+  Tu navegador no soporta el elemento de audio. </audio>`;
 }
 // document.addEventListener("DOMContentLoaded", function() {
 //     let btn_buscar = document.querySelector("#buscarCancion");
@@ -126,11 +126,11 @@ async function buscarCancionesYplaylist() {
     if (Array.isArray(canciones) && canciones.length > 0) {
       for (let cancion of canciones) {
         div.innerHTML += `
-                    <div class="VistaCancion" onclick="ReproducirMusica('${cancion.titulo}')">
-                    <img src="./img/corchea.gif" alt="musica" id="img_corchea">
-                        <h4>${cancion.titulo}</h4>
-                        <h5>${cancion.autor}</h5>
-                    </div>`;
+                  <div class="VistaCancion" onclick="ReproducirMusica('${cancion.titulo}')">
+                  <img src="./img/corchea.gif" alt="musica" id="img_corchea">
+                      <h4>${cancion.titulo}</h4>
+                      <h5>${cancion.autor}</h5>
+                  </div>`;
       }
     } else {
       div.innerHTML += `<p>No se encontraron canciones</p>`;
@@ -149,11 +149,11 @@ async function buscarCancionesYplaylist() {
     if (Array.isArray(playlists) && playlists.length > 0) {
       for (let playlist of playlists) {
         div.innerHTML += `
-                    <div class="VistaPlaylist" onclick="mostrar_canciones_playlist('${playlist.nombre}')">
-                    <img src="./img/playlist.jpg" alt="musica" id="img_corchea">
-                        <h4>${playlist.nombre}</h4>
-                        <h5>${playlist.likes}</h5>
-                    </div>`;
+                  <div class="VistaPlaylist" onclick="mostrar_canciones_playlist('${playlist.nombre}')">
+                  <img src="./img/playlist.jpg" alt="musica" id="img_corchea">
+                      <h4>${playlist.nombre}</h4>
+                      <h5>${playlist.likes}</h5>
+                  </div>`;
       }
     } else {
       div.innerHTML += `<p>No se encontraron playlists</p>`;
@@ -163,6 +163,38 @@ async function buscarCancionesYplaylist() {
     div.innerHTML += `<p>Error al buscar canciones</p>`;
   }
   div.innerHTML += `
-    <audio id="audioPlayer" controls style="display: block; margin-top: 20px;"> 
-    Tu navegador no soporta el elemento de audio. </audio>`;
+  <audio id="audioPlayer" controls style="display: block; margin-top: 20px;"> 
+  Tu navegador no soporta el elemento de audio. </audio>`;
+}
+
+async function mostrar_mis_playlist() {
+  let div = document.querySelector("#contenido_body");
+  div.innerHTML = `<h2>Mis Playlists</h2>`;
+
+  try {
+    let response = await fetch("/user/mis_playlists");
+    if (!response.ok) throw new Error("Error al obtener playlists");
+
+    let data = await response.json();
+
+    let grid = document.createElement("div");
+    grid.classList.add("row", "grid-playlist");
+
+    data.mis_playlists.forEach((playlist) => {
+      let playlistHTML = `
+      <div class="col-md-2 col-sm-6 col-12">
+        <div class="VistaPlaylist">
+          <img src="./img/playlist.jpg" alt="playlist" id="img_playlist" onclick="mostrar_canciones_playlist('${playlist.nombre}')">
+          <h4>${playlist.nombre}</h4>
+          <h5>Likes: ${playlist.likes}</h5>
+        </div>
+      </div>`;
+      grid.innerHTML += playlistHTML;
+    });
+
+    div.appendChild(grid);
+  } catch (error) {
+    console.error(error);
+    div.innerHTML += `<p>Error al cargar playlists.</p>`;
+  }
 }

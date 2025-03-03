@@ -27,7 +27,7 @@ class PlaylistType extends AbstractType
                 'multiple' => true,
                 'expanded' => true, //Muestra checkboxes
                 'label' => ' ',
-                'mapped' => false,
+                //'mapped' => false,
                 'attr' => ['style' => 'display:none']
             ]);
     }

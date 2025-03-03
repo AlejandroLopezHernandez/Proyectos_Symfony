@@ -41,15 +41,14 @@
     {{ form_start(form, {'attr': {'id': 'crear-playlist-form'}}) }}
         {{ form_row(form.nombre) }}
         {{ form_row(form.visibilidad) }}
-        <label for="canciones">Selecciona Canciones:</label>
-        <select id="canciones" name="canciones[]" multiple>
+        <label for="canciones">Selecciona Canciones:</label><br>
             {% for cancion in canciones %}
-                <option value="{{ cancion.id }}">{{ cancion.titulo }} - {{ cancion.autor }}</option>
+            <input type="checkbox" id="cancion_{{cancion.id}}" name="canciones[]" value="{{cancion.id}}">
+            <label for="cancion_{{ cancion.id}}">{{cancion.titulo}} - {{cancion.autor}}</label><br>
             {% endfor %}
-        </select><br>
+        <br>
         <button type="submit">Guardar Playlist</button>
     {{ form_end(form) }}
-
 </div>
    <footer>2025 MySpotify. - Todos los derechos reservados</footer>
 <script src="{{ asset('./script.js')}}"></script>

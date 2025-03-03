@@ -22,45 +22,53 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Constraints\Json;
 
-
-
 final class PlaylistController extends AbstractController
 {
     #[Route('/user/crear_playlist', name: 'crear_playlist', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
+    /* EntityManager: interacturar con la BBDD
+       Request: Contiene datos de formularios y de peticiones GET/POST
+       Security: obtner información sobre el usuario identificado  */
     public function crearPlaylist(EntityManagerInterface $entityManager, Request $request, CancionRepository $repositorioCancion, Security $security): Response
     {
+        //Obtenemos el usuario actual y la playlist, asignamos a una playlist un usuario
         $usuario = $security->getUser();
         $playlist = new Playlist();
-        $playlist->setLikes(0); // Establecemos un valor predeterminado para likes
+        $playlist->setLikes(0); // Establecemos un valor predeterminado para likes, este campo es obligatorio
         $playlist->setPropietario($usuario);
-
+        //Creamos el formulario basado en Playlist Type, usamos la clase playlist
         $form = $this->createForm(PlaylistType::class, $playlist);
         $form->handleRequest($request);
-
+        //Si el formulario se envía y es válido, hacemos lo siguiente
         if ($form->isSubmitted() && $form->isValid()) {
-            $cancionesIds = $request->request->all('canciones');
-            if (!is_array($cancionesIds)) {
-                $cancionesIds = [];
+            //Obtenemos todas las canciones seleccionadas
+            $canciones = $request->request->all('canciones');
+            //Nos aseguramos que las canciones sean un array
+            if (!is_array($canciones)) {
+                $canciones = [];
             }
-            foreach ($cancionesIds as $cancionId) {
-                $cancion = $repositorioCancion->find($cancionId);
+            foreach ($canciones as $cancion) {
+                //Recorremos las canciones con un bucle, luego la encontramos
+                $cancion = $repositorioCancion->find($cancion);
                 if ($cancion) {
+                    /*Ya que Playlist y Cancion es una N:M tenemos que usar la clase
+                    PlaylistCancion para establecer la asociación 
+                    Creamos una Playlist, y a PlaylistCancion le asociamos una playlist
+                    y una canción */
                     $playlistCancion = new PlaylistCancion();
                     $playlistCancion->setCancion($cancion);
                     $playlistCancion->setPlaylist($playlist);
                     $entityManager->persist($playlistCancion);
                 }
             }
-
+            //Guardamos la playlist en la BBDD
             $entityManager->persist($playlist);
             $entityManager->flush();
 
             return $this->redirectToRoute('main_page');
-            //return new JsonResponse(['message' => 'Playlist creada con éxito', 'playlist_id' => $playlist->getId()]);
         }
         $canciones = $repositorioCancion->findAll();
-
+        //Mostrar el formulario si no se ha enviado
         return $this->render('playlist/crear.html.twig', [
             'form' => $form->createView(),
             'canciones' => $canciones,
@@ -143,23 +151,29 @@ final class PlaylistController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function misPlaylists(EntityManagerInterface $entityManager, PlaylistRepository $repositorioPlaylist): JsonResponse
     {
+        //Obtenemos el usuario actual, si no existe, devuelve una respuesta JSON
         $user = $this->getUser();
         if (!$user) {
             return new JsonResponse(['error' => 'Debes inciar sesión para poder ver tus playlists'], 403);
         }
+        //Buscamos en el repositorio de Playlists las playlist del usuario actual
         $playlistPropias = $repositorioPlaylist->findBy(['propietario' => $user]);
+        //Obtenemos el repositorio de la entidad UsuarioPlaylist
         $usuarioPlaylistRepo = $entityManager->getRepository(\App\Entity\UsuarioPlaylist::class);
+        //Buscamos las playlists compartidas del usuario actual
         $playlistsCompartidas = $usuarioPlaylistRepo->findBy(['usuario' => $user]);
-
+        //Con array_map extraemos sólo las playlists
         $playlistsCompartidasArray = array_map(fn($usuarioPlaylist) => $usuarioPlaylist->getPlaylist(), $playlistsCompartidas);
-
+        //Combinamos los dos arrays anteriores con array_merge y con array_map eliminamos duplicados
         $todasLasPlaylists = array_unique(array_merge($playlistPropias, $playlistsCompartidasArray), SORT_REGULAR);
+        //Formateamos en JSON
         $misPlaylistsArray = array_map(fn($playlist) => [
             'id' => $playlist->getId(),
             'nombre' => $playlist->getNombre(),
             'likes' => $playlist->getLikes(),
             'visibilidad' => $playlist->getVisibilidad(),
         ], $todasLasPlaylists);
+        //Devolvemos la respuesta
         return new JsonResponse([
             'success' => true,
             'mis_playlists' => $misPlaylistsArray

@@ -251,54 +251,142 @@ nav ul li a:hover {
 }
 @media(max-width:768px){
     body{
-        font-size: 14px;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 12px; 
+    }
+    #img_login {
+        display: block !important; /* Asegura que sea visible */
+        width: 30px; /* Ajusta el tamaño según necesites */
+        height: auto;
+        margin-right: 10px;
     }
     nav{
-        flex-direction: column;
-        text-align: center;
-        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 5px; 
+        background-color: #1DB954;
+        color: white;
+        height: 65px; 
     }
     nav ul{
         flex-direction: column;
         width: 100%;
+        padding: 0;
     }
     nav ul li{
         margin: 5px 0;
     }
-    .barra_lateral{
-        width: 50px;
+    nav img {
+        height: 30px;
+        width: auto;
+        margin-left: 5px;
+        display: block;
+    }
+    
+    nav h1 {
+        margin-left: 5px;
+        font-size: 18px;
+        padding-left: 0;
+    }
+    .busqueda {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-grow: 1;
+        margin: 0 10px; /* Margen reducido */
+    }
+    
+    .busqueda input {
         padding: 5px;
+        margin-right: 5px; /* Margen reducido */
+        border: none;
+        border-radius: 5px;
+        width: 60%; /* Ancho ajustado */
+        max-width: 190px; /* Ancho máximo para pantallas pequeñas */
+        font-size: 12px; /* Tamaño de fuente reducido */
+    }
+    
+    .busqueda button {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #1ED760;
+        color: white;
+        cursor: pointer;
+        font-size: 12px; /* Tamaño de fuente reducido */
+    }
+    .barra_lateral{
+        flex-direction: column;
+        background-color: #191414;
+        padding: 10px;
+        position: fixed;
+        top: 65px; /* Ajustado a la altura de la barra superior */
+        left: 0;
+        height: calc(100% - 50px); /* Altura ajustada */
+        width: 100px; /* Ancho reducido */
+        z-index: 1000;
+        transition: width 0.3s ease-in-out;
+    }
+    .barra_lateral.activa{
+        width: 120px;
+    }
+    .barra_lateral ul {
+        list-style: none;
+        padding: 0;
     }
     .barra_lateral ul li a{
         font-size: 14px;
         padding: 5px;
+        display: block;
     }
     img{
         max-width: 100%;
         height: auto;
     }
+    #icono{
+        height: 30px;
+        width: 30px;
+    }
     #contenido_body h2{
-        grid-column: 1 / -1; /* Ocupa desde la primera columna hasta la última */
-        text-align: left; /* Alinea el texto a la izquierda */
-        margin-top: 20px; /* Espacio superior */
+        grid-column: 1 / -1; 
+        text-align: left; 
+        margin-left: 0;
+        margin-top: 20px;
         margin-bottom: 10px; 
     }
     .busqueda {
         flex-direction: column;
         align-items: center;
-        margin-left: 0;
+        width: 100%;
+        margin-top: 10px;
     }
-    .grid-canciones{
-        display:flex;
+    .grid-canciones .VistaCancion,
+    .grid-playlists .VistaPlaylist {
+        display: flex;
         flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
+        width: 100%;
+        max-width: 300px;
+        margin: 10px auto;
     }
-    .grid-playlists{
-        display:flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
+    .VistaCancion, .VistaPlaylist {
+        background-color: #282828;
+        padding: 8px; /* Padding reducido */
+        border-radius: 10px;
+        text-align: center;
+        color: white;
+        cursor: pointer;
+        flex: 1 1 calc(100% - 20px); /* Una columna en móviles */
+        box-sizing: border-box;
+    }
+    
+    .VistaCancion img, .VistaPlaylist img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
     }
     .busqueda input {
         width: 80%;
@@ -307,6 +395,11 @@ nav ul li a:hover {
         position: relative;
         padding: 5px;
         font-size: 12px;
+        text-align: center;
+        background-color: #323030;
+        color: white;
+        flex-shrink: 0;
+        position: fixed;
     }
 }
 @media (max-width:600px){
@@ -314,7 +407,19 @@ nav ul li a:hover {
         max-width: 70px; 
         height: auto;
         display: block;
-        margin-left: 8cm;
+        text-align:center;
     }
-    
+    #audioPlayer {
+        width: 90%;
+        left: 5%;
+        bottom: 10px;
+    }
+    .VistaCancion, .VistaPlaylist {
+        flex: 1 1 calc(100% - 20px);
+    }
+
+    .grid-canciones, .grid-playlists {
+        flex-direction: column;
+        align-items: center;
+    }
 }
