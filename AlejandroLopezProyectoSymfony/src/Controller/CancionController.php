@@ -6,8 +6,10 @@ use App\Entity\Cancion;
 use App\Repository\CancionRepository;
 use App\Repository\PlaylistRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -16,6 +18,12 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 final class CancionController extends AbstractController
 {
+    private LoggerInterface $logger;
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     #[Route('/user/CrearCancion', name: 'app_cancion')]
     public function crearCancion(EntityManagerInterface $entityManager): Response
     {
@@ -35,15 +43,15 @@ final class CancionController extends AbstractController
         return new Response("Canción guardada con éxito");
     }
     #[Route('/user/cancion/{tituloCancion}', name: 'play_music', methods: ['GET'])]
-    public function ReproducirMusica(string $tituloCancion, EntityManagerInterface $entityManager): Response
+    public function ReproducirMusica(string $tituloCancion, EntityManagerInterface $entityManager, Security $security): Response
     {
+        $usuario = $security->getUser();
         $repositorio = $entityManager->getRepository(Cancion::class);
         $cancion = $repositorio->findOneBy(['titulo' => $tituloCancion]);
         if (!$cancion) {
             return new Response("Error 1, canción no encontrada", 404);
         }
         $nombreArchivo = trim($cancion->getArchivo());
-        var_dump($nombreArchivo . '<br>');
         $directorioMusica = $this->getParameter('kernel.project_dir') . '/public/songs/';
         $ruta = $directorioMusica . $nombreArchivo . ".mp3";
 
@@ -53,6 +61,23 @@ final class CancionController extends AbstractController
         $response = new BinaryFileResponse($ruta);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE);
         $response->headers->set('Content-Type', 'audio/mpeg');
+
+        if (!$usuario) {
+            $this->logger->info("Se ha reproducido una canción", [
+                'cancion' => $cancion->getTitulo(),
+                'action' => 'play',
+                'timestamp' => date('Y-m-d H:i:s')
+            ]);
+        } else {
+            $this->logger->info("Se ha reproducido una canción", [
+                'usuario' => $usuario->getUserIdentifier(),
+                'cancion' => $cancion->getTitulo(),
+                'action' => 'play',
+                'timestamp' => date('Y-m-d H:i:s')
+            ]);
+        }
+
+
         return $response;
     }
     #[Route('/main', name: 'main_page')]
@@ -92,8 +117,9 @@ final class CancionController extends AbstractController
         ]);
     }
     #[Route('/user/buscarCancion/{titulo}', name: 'buscar_cancion', methods: ['GET'])]
-    public function BuscarCancion(string $titulo, CancionRepository $repositorio): JsonResponse
+    public function BuscarCancion(string $titulo, CancionRepository $repositorio, Security $security): JsonResponse
     {
+        $usuario = $security->getUser();
         if (!$titulo) {
             return new JsonResponse(['error' => 'No se proporcionó un título'], 400);
         }
@@ -111,6 +137,20 @@ final class CancionController extends AbstractController
                 'titulo' => $cancion->getTitulo(),
                 'autor' => $cancion->getAutor()
             ];
+        }
+        if (!$usuario) {
+            $this->logger->info("Se ha buscado una canción", [
+                'cancion' => $cancion->getTitulo(),
+                'action' => 'search',
+                'timestamp' => date('Y-m-d H:i:s')
+            ]);
+        } else {
+            $this->logger->info("Se ha buscado una canción", [
+                'usuario' => $usuario->getUserIdentifier(),
+                'cancion' => $cancion->getTitulo(),
+                'action' => 'search',
+                'timestamp' => date('Y-m-d H:i:s')
+            ]);
         }
         return new JsonResponse($canciones_disponibles);
     }

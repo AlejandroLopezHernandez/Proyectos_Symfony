@@ -28,3 +28,26 @@ services:
             - { name: kernel.event_listener, event: security.logout, method: onLogout }
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\EventListener\UserActivityListener:
+        arguments:
+            $logger: '@monolog.logger.security'
+            $security: '@security.helper'
+            $requestStack: '@request_stack'
+        tags:
+             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    App\Controller\PlaylistController:
+        arguments:
+            $logger: '@monolog.logger.security'
+    App\Controller\EstadisticasController:
+        arguments:
+            $logger: '@monolog.logger.security'
+    App\Controller\RegistroController:
+        arguments:
+            $logger: '@monolog.logger.security'
+    App\Controller\CancionController:
+        arguments:
+            $logger: '@monolog.logger.security'
+    App\EventListener\AdminActivityLogger:
+        arguments:
+            $logger: '@monolog.logger.security'
+            $security: '@security.helper'

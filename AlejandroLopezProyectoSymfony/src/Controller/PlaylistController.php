@@ -13,6 +13,7 @@ use App\Repository\CancionRepository;
 use App\Repository\PlaylistRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -24,6 +25,11 @@ use Symfony\Component\Validator\Constraints\Json;
 
 final class PlaylistController extends AbstractController
 {
+    private LoggerInterface $logger;
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
     #[Route('/user/crear_playlist', name: 'crear_playlist', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     /* EntityManager: interacturar con la BBDD
@@ -65,6 +71,13 @@ final class PlaylistController extends AbstractController
             $entityManager->persist($playlist);
             $entityManager->flush();
 
+            $this->logger->info("Playlist creada", [
+                'usuario' => $usuario->getUserIdentifier(),
+                'nombre' => $playlist->getNombre(),
+                'action' => 'create',
+                'timestamp' => date('Y-m-d H:i:s')
+            ]);
+
             return $this->redirectToRoute('main_page');
         }
         $canciones = $repositorioCancion->findAll();
@@ -83,8 +96,9 @@ final class PlaylistController extends AbstractController
     }*/
 
     #[Route('/user/playlist', name: 'index_playlist')]
-    public function index2(PlaylistRepository $repositorio2): JsonResponse
+    public function index2(PlaylistRepository $repositorio2, Security $security): JsonResponse
     {
+        $usuario = $security->getUser();
         $playlistsobtenidas = $repositorio2->findAll();
         $playlistdisponibles = [];
         foreach ($playlistsobtenidas as $playlist) {
@@ -95,12 +109,19 @@ final class PlaylistController extends AbstractController
                 'visibilidad' => $playlist->getVisibilidad()
             ];
         }
+        $this->logger->info("El usuario ha accedido a la playlist", [
+            'usuario' => $usuario->getUserIdentifier(),
+            'nombre' => $playlist->getNombre(),
+            'action' => 'access',
+            'timestamp' => date('Y-m-d H:i:s')
+        ]);
         return new JsonResponse($playlistdisponibles);
     }
     #[Route('/user/CancionesPlaylist/{tituloPlaylist}', name: 'canciones_playlist', methods: ['GET'])]
-    public function CancionesPlaylist(EntityManagerInterface $entityManager, string $tituloPlaylist): JsonResponse
+    public function CancionesPlaylist(EntityManagerInterface $entityManager, string $tituloPlaylist, Security $security): JsonResponse
     {
         try {
+            $usuario = $security->getUser();
             $RepositorioPlaylist = $entityManager->getRepository(Playlist::class);
             $playlist = $RepositorioPlaylist->findOneBy(['nombre' => $tituloPlaylist]);
             if (!$playlist) {
@@ -116,14 +137,21 @@ final class PlaylistController extends AbstractController
                     'ruta' => $this->getParameter('kernel.project_dir') . '/songs/' . $cancion->getArchivo() . '.mp3'
                 ];
             }
+            $this->logger->info("El usuario ha accedido a las canciones de la playlist", [
+                'usuario' => $usuario->getUserIdentifier(),
+                'nombre' => $playlist->getNombre(),
+                'action' => 'access',
+                'timestamp' => date('Y-m-d H:i:s')
+            ]);
             return new JsonResponse($canciones);
         } catch (\Exception $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 500);
         }
     }
     #[Route('/user/buscarPlaylist/{nombre}', name: 'buscar_playlist', methods: ['GET'])]
-    public function buscarPlaylistXNombre(PlaylistRepository $repositorio, string $nombre): JsonResponse
+    public function buscarPlaylistXNombre(PlaylistRepository $repositorio, string $nombre, Security $security): JsonResponse
     {
+        $usuario = $security->getUser();
         if (!$nombre) {
             return new JsonResponse(['error' => 'No se proporcionó un nombre'], 400);
         }
@@ -145,11 +173,17 @@ final class PlaylistController extends AbstractController
                 'likes' => $playlist->getLikes(),
             ];
         }
+        $this->logger->info("El usuario ha accedido a esta playlist", [
+            'usuario' => $usuario->getUserIdentifier(),
+            'nombre' => $playlist->getNombre(),
+            'action' => 'access',
+            'timestamp' => date('Y-m-d H:i:s')
+        ]);
         return new JsonResponse($playlistdisponibles);
     }
     #[Route('/user/mis_playlists', name: 'mis_playlists', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
-    public function misPlaylists(EntityManagerInterface $entityManager, PlaylistRepository $repositorioPlaylist): JsonResponse
+    public function misPlaylists(EntityManagerInterface $entityManager, PlaylistRepository $repositorioPlaylist, Security $security): JsonResponse
     {
         //Obtenemos el usuario actual, si no existe, devuelve una respuesta JSON
         $user = $this->getUser();
@@ -173,6 +207,12 @@ final class PlaylistController extends AbstractController
             'likes' => $playlist->getLikes(),
             'visibilidad' => $playlist->getVisibilidad(),
         ], $todasLasPlaylists);
+
+        $this->logger->info("El usuario ha accedido sus playlists", [
+            'usuario' => $user->getUserIdentifier(),
+            'action' => 'access',
+            'timestamp' => date('Y-m-d H:i:s')
+        ]);
         //Devolvemos la respuesta
         return new JsonResponse([
             'success' => true,
