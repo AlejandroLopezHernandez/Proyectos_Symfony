@@ -95,9 +95,11 @@ final class PlaylistController extends AbstractController
         return $this->render('./play/play.html.twig',['playlists'=>$playlists]);
     }*/
 
+    //Con esta función accedemos a una playlist y la devolvemos en JSON
     #[Route('/user/playlist', name: 'index_playlist')]
     public function index2(PlaylistRepository $repositorio2, Security $security): JsonResponse
     {
+
         $usuario = $security->getUser();
         $playlistsobtenidas = $repositorio2->findAll();
         $playlistdisponibles = [];
@@ -109,14 +111,23 @@ final class PlaylistController extends AbstractController
                 'visibilidad' => $playlist->getVisibilidad()
             ];
         }
-        $this->logger->info("El usuario ha accedido a la playlist", [
-            'usuario' => $usuario->getUserIdentifier(),
-            'nombre' => $playlist->getNombre(),
-            'action' => 'access',
-            'timestamp' => date('Y-m-d H:i:s')
-        ]);
+        if (!$usuario) {
+            $this->logger->info("Se ha accedido a la playlist", [
+                'nombre' => $playlist->getNombre(),
+                'action' => 'access',
+                'timestamp' => date('Y-m-d H:i:s')
+            ]);
+        } else {
+            $this->logger->info("El usuario ha accedido a la playlist", [
+                'usuario' => $usuario->getUserIdentifier(),
+                'nombre' => $playlist->getNombre(),
+                'action' => 'access',
+                'timestamp' => date('Y-m-d H:i:s')
+            ]);
+        }
         return new JsonResponse($playlistdisponibles);
     }
+    //Este método lo usa JS para mostrar las canciones de una playlist
     #[Route('/user/CancionesPlaylist/{tituloPlaylist}', name: 'canciones_playlist', methods: ['GET'])]
     public function CancionesPlaylist(EntityManagerInterface $entityManager, string $tituloPlaylist, Security $security): JsonResponse
     {
@@ -137,12 +148,20 @@ final class PlaylistController extends AbstractController
                     'ruta' => $this->getParameter('kernel.project_dir') . '/songs/' . $cancion->getArchivo() . '.mp3'
                 ];
             }
-            $this->logger->info("El usuario ha accedido a las canciones de la playlist", [
-                'usuario' => $usuario->getUserIdentifier(),
-                'nombre' => $playlist->getNombre(),
-                'action' => 'access',
-                'timestamp' => date('Y-m-d H:i:s')
-            ]);
+            if (!$usuario) {
+                $this->logger->info("Se ha accedido a las canciones de la playlist", [
+                    'nombre' => $playlist->getNombre(),
+                    'action' => 'access',
+                    'timestamp' => date('Y-m-d H:i:s')
+                ]);
+            } else {
+                $this->logger->info("El usuario ha accedido a las canciones de la playlist", [
+                    'usuario' => $usuario->getUserIdentifier(),
+                    'nombre' => $playlist->getNombre(),
+                    'action' => 'access',
+                    'timestamp' => date('Y-m-d H:i:s')
+                ]);
+            }
             return new JsonResponse($canciones);
         } catch (\Exception $exception) {
             return new JsonResponse(['error' => $exception->getMessage()], 500);
@@ -173,12 +192,20 @@ final class PlaylistController extends AbstractController
                 'likes' => $playlist->getLikes(),
             ];
         }
-        $this->logger->info("El usuario ha accedido a esta playlist", [
-            'usuario' => $usuario->getUserIdentifier(),
-            'nombre' => $playlist->getNombre(),
-            'action' => 'access',
-            'timestamp' => date('Y-m-d H:i:s')
-        ]);
+        if (!$usuario) {
+            $this->logger->info("Se ha accedido a esta playlist", [
+                'nombre' => $playlist->getNombre(),
+                'action' => 'access',
+                'timestamp' => date('Y-m-d H:i:s')
+            ]);
+        } else {
+            $this->logger->info("El usuario ha accedido a esta playlist", [
+                'usuario' => $usuario->getUserIdentifier(),
+                'nombre' => $playlist->getNombre(),
+                'action' => 'access',
+                'timestamp' => date('Y-m-d H:i:s')
+            ]);
+        }
         return new JsonResponse($playlistdisponibles);
     }
     #[Route('/user/mis_playlists', name: 'mis_playlists', methods: ['GET'])]

@@ -23,7 +23,7 @@ function ReproducirMusica(titulo) {
   });
 }
 async function mostrar_playlist() {
-  console.log("prueba");
+  console.log("prueba mostrar playlists");
   let div = document.querySelector("#contenido_body");
   let query = await fetch(`/user/playlist`);
   let playlists = await query.json();

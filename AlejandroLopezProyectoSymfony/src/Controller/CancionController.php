@@ -61,7 +61,7 @@ final class CancionController extends AbstractController
         $response = new BinaryFileResponse($ruta);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE);
         $response->headers->set('Content-Type', 'audio/mpeg');
-
+        //Se puede reproducir una canción sin iniciar sesión
         if (!$usuario) {
             $this->logger->info("Se ha reproducido una canción", [
                 'cancion' => $cancion->getTitulo(),
@@ -85,7 +85,7 @@ final class CancionController extends AbstractController
     {
         $canciones = $repositorio1->findAll();
         $playlists = $repositorio2->findAll();
-
+        //Después en el main haremos un bucle con estas canciones y playlists
         return $this->render('./play/play.html.twig', ['canciones' => $canciones, 'playlists' => $playlists]);
     }
 
