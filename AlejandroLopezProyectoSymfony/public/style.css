@@ -1,17 +1,20 @@
 body{
     background-color: rgb(54, 52, 52);
-    h1{
-        color: black;
-        font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        font-size:xx-large;
-        cursor: pointer;
-        text-decoration: none;
-    }
 }
-    h2{
-        color: white;
-    }
-    footer{
+h2{
+    color: white;
+}
+h1{
+    color: black;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size:xx-large;
+    cursor: pointer;
+    text-decoration: none;
+}
+h1 a {
+    text-decoration: none !important;
+}
+footer{
         background-color:rgb(105, 103, 103);
         color: white;
         position: fixed;
